@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ems_api.Controllers;
 
-//TODO edit user, delete user, get user, get all users, get workdays in period, etc
+//TODO edit user, delete user, get user, get all users, 
+
+//TODO auth på CRUD
 [Route("api/[controller]")]
 [ApiController]
 public class UserController : ControllerBase {
