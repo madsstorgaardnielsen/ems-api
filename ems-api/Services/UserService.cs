@@ -1,9 +1,18 @@
+using ems_api.Database;
+using ems_api.Database.Repositories;
+
 namespace ems_api.Services;
 
 using Interfaces;
 
-//TODO interface
+//TODO
 public class UserService : IUserService {
+    private readonly IWorkdayRepository _workdayRepository;
+
+    public UserService() {
+        _workdayRepository = new WorkdayRepository(new ApplicationDbContext());
+    }
+
     public Task<List<WorkdayDto>> GetAllWorkdays() {
         throw new NotImplementedException();
     }
@@ -17,7 +26,11 @@ public class UserService : IUserService {
     }
 
 
-    public Task<int> AddWorkday(WorkdayEntity workdayEntity) {
+    public async Task<int> AddWorkday(WorkdayEntity workdayEntity) {
+        // var result = await _workdayRepository.AddWorkday(workdayEntity);
+        // if (result==-1) {
+        //     
+        // }
         throw new NotImplementedException();
     }
 
