@@ -4,6 +4,7 @@ using Services;
 using Utils;
 using Microsoft.AspNetCore.Mvc;
 
+//TODO find ud af noget om UserManager
 //TODO log out
 [Route("api/[controller]")]
 [ApiController]
