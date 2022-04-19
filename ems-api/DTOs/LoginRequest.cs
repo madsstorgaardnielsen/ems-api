@@ -1,8 +1,9 @@
-namespace ems_api.DTOs; 
+using System.Runtime.Serialization;
 
+namespace ems_api.DTOs;
+
+[DataContract]
 public class LoginRequest {
-    public string Email { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
-
-
+    [DataMember] public string Email { get; set; } = string.Empty;
+    [DataMember] public string Password { get; set; } = string.Empty;
 }

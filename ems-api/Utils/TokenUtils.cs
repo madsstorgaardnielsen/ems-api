@@ -3,7 +3,7 @@ using System.Security.Claims;
 using ems_api.DTOs;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ems_api.Security; 
+namespace ems_api.SecurityUtils; 
 
 public class TokenUtils {
     
@@ -16,8 +16,8 @@ public class TokenUtils {
     
     public string CreateToken(UserDto user) {
         var claims = new List<Claim> {
-            new(ClaimTypes.Name, user.Email),
-            // new(ClaimTypes.Role, "Admin"),
+            // new(ClaimTypes.Email, user.Email),
+            new(ClaimTypes.Role, user.Role),
         };
 
         var key = new SymmetricSecurityKey(

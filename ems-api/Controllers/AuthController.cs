@@ -1,5 +1,6 @@
 using ems_api.DTOs;
 using ems_api.Security;
+using ems_api.SecurityUtils;
 using ems_api.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,24 +11,21 @@ namespace ems_api.Controllers;
 [ApiController]
 public class AuthController : ControllerBase {
     private readonly IConfiguration _configuration;
+    private readonly AuthService _authService;
 
     public AuthController(IConfiguration configuration) {
         _configuration = configuration;
+        _authService = new AuthService();
     }
-
-    private readonly UserService _userService = new();
 
     [HttpPost("login")]
     public async Task<ActionResult<string>> Login(LoginRequest request) {
-        var user =  _userService.AuthenticateUser(request);
+        var user = await _authService.AuthenticateUser(request);
 
-        if (user != null) {
-            var tokenUtil = new TokenUtils(_configuration);
-            var token = tokenUtil.CreateToken(user);
-            return Ok(token);
-        }
-
-        return BadRequest("Invalid credentials");
+        if (user == null) return BadRequest("Invalid credentials");
+        
+        var tokenUtil = new TokenUtils(_configuration);
+        var token = tokenUtil.CreateToken(user);
+        return Ok(token);
     }
-
 }

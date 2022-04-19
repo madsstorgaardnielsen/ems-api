@@ -1,55 +1,54 @@
+using ems_api.DTOs;
+
 namespace ems_api.Database.Repositories;
 
 public class UserRepository : IUserRepository {
-    private readonly UserContext _context;
+    private readonly ApplicationDbContext _database;
 
-    public UserRepository(UserContext context) {
-        _context = context;
+    public UserRepository(ApplicationDbContext context) {
+        _database = context;
     }
 
-    public IEnumerable<UserEntity> GetAllUsers() {
-        return _context.Users.ToList();
+    public async Task<IEnumerable<UserEntity>> GetAllUsers() {
+        return await _database.Users.ToListAsync();
     }
 
-    public UserEntity GetUserById(int userId) {
-        return _context.Users.Find(userId);
+    public async Task<UserEntity> GetUserById(int userId) {
+        var entity = await _database.Users.FindAsync(userId);
+        return entity ?? null;
     }
 
-    public UserEntity GetUserByEmail(string email) {
-        return _context.Users.SingleOrDefault(user => user.Email == email);
+    public async Task<int> CreateUser(UserEntity userEntity) {
+        if (userEntity == null) return -1;
+        _database.Users.Add(userEntity);
+        await _database.SaveChangesAsync();
+        return userEntity.UserId;
     }
 
-    public int AddUser(UserEntity userEntity) {
-        int result = -1;
+    public async Task<int> UpdateUser(UserEntity userEntity) {
+        var user = await _database.Users.SingleOrDefaultAsync(user => user.UserId == userEntity.UserId);
+        if (user == null) return -1;
 
-        if (userEntity != null) {
-            _context.Users.Add(userEntity);
-            _context.SaveChanges();
-            result = userEntity.UserId;
-        }
-
-        return result;
+        _database.Entry(user).CurrentValues.SetValues(userEntity);
+        await _database.SaveChangesAsync();
+        return user.UserId;
     }
 
-    public int UpdateUser(UserEntity userEntity) {
-        int result = -1;
-
-        if (userEntity != null) {
-            _context.Entry(userEntity).State = EntityState.Modified;
-            _context.SaveChanges();
-            result = userEntity.UserId;
-        }
-
-        return result;
+    public async Task<bool> DeleteUser(int userId) {
+        var userEntity = await _database.Users.FindAsync(userId);
+        if (userEntity == null) return false;
+        userEntity.Deleted = true;
+        _database.Entry(userEntity);
+        await _database.SaveChangesAsync();
+        return true;
     }
-
 
     private bool _disposed;
 
     protected virtual void Dispose(bool disposing) {
         if (!_disposed) {
             if (disposing) {
-                _context.Dispose();
+                _database.Dispose();
             }
         }
 
@@ -58,14 +57,6 @@ public class UserRepository : IUserRepository {
 
     public void Dispose() {
         Dispose(true);
-
         GC.SuppressFinalize(this);
-    }
-
-
-    public void DeleteUser(int userId) {
-        UserEntity userEntity = _context.Users.Find(userId);
-        _context.Users.Remove(userEntity);
-        _context.SaveChanges();
     }
 }

@@ -5,12 +5,11 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<ApplicationDbContext>();
 
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<UserContext>(options => {
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-});
+
+
+
 
 //     protected override void OnModelCreating(ModelBuilder modelBuilder) {
 //         base.OnModelCreating(modelBuilder);
@@ -26,16 +25,17 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen(options => { 
-    options.AddSecurityDefinition("oath2", new OpenApiSecurityScheme 
-    {
-        Description = "Standard Auth header using the Bearer Scheme (\"bearer {token}\")",
-        In = ParameterLocation.Header,
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey
-    }); 
-    options.OperationFilter<SecurityRequirementsOperationFilter>();
-});
+builder.Services.AddSwaggerGen(
+//     options => {
+//     options.AddSecurityDefinition("oath2", new OpenApiSecurityScheme {
+//         Description = "Standard Auth header using the Bearer Scheme (\"bearer {token}\")",
+//         In = ParameterLocation.Header,
+//         Name = "Authorization",
+//         Type = SecuritySchemeType.ApiKey
+//     });
+//     options.OperationFilter<SecurityRequirementsOperationFilter>();
+// }
+    );
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
     options.TokenValidationParameters =
@@ -56,7 +56,6 @@ if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 
 
 app.UseHttpsRedirection();
