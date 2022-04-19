@@ -1,6 +1,6 @@
-using ems_api.Database.Enums;
-
 namespace ems_api.Database.Models;
+
+using Enums;
 
 [Table("Users")]
 public class UserEntity {
@@ -26,7 +26,7 @@ public class UserEntity {
     [MaxLength(255), MinLength(2)]
     [EmailAddress]
     public string Email { get; set; }
-    
+
     [Required(ErrorMessage = "Phone is required")]
     [MinLength(8)]
     [Phone]
@@ -39,9 +39,8 @@ public class UserEntity {
     [Required(ErrorMessage = "Role is required")]
     [EnumDataType(typeof(Role))]
     public string Role { get; set; }
-    
-    [Required]
-    public DateTime Created { get; set; }
+
+    [Required] public DateTime Created { get; set; }
 
     [Required] public bool Deleted { get; set; } = false;
 

@@ -1,12 +1,12 @@
-using ems_api.Utils;
+using ems_api.Database;
 
 namespace ems_api.Services;
-
+using Interfaces;
+using Utils;
 using Database.Repositories;
-using DTOs;
 using Security;
 
-public class AdminService {
+public class AdminService : IAdminService{
     private readonly IUserRepository _userRepository;
     private readonly PasswordUtils _pwUtils;
     private readonly AutoMapperUtils _autoMapper;
@@ -27,31 +27,26 @@ public class AdminService {
     public async Task<bool> DeleteUser(int userId) {
         return await _userRepository.DeleteUser(userId);
     }
-    
+
     public async Task<UserDtoProjection> GetUserById(int userId) {
         var userEntity = await _userRepository.GetUserById(userId);
-        var userDto = _autoMapper.UserEntityToUserDtoMapper(userEntity);
-        var userDtoProjection = _autoMapper.UserDtoToUserDtoProjection(userDto);
-        return userDtoProjection;
+        if (userEntity != null) {
+            var userDto = _autoMapper.UserEntityToUserDtoMapper(userEntity);
+            var userDtoProjection = _autoMapper.UserDtoToUserDtoProjection(userDto);
+            return userDtoProjection;
+        }
+
+        return null;
     }
 
     public async Task<List<UserDtoProjection>> GetAllUsers() {
         var entities = await _userRepository.GetAllUsers();
-
-        var userDtoProjection = from user in entities
-            select new UserDtoProjection {
-                Firstname = user.Firstname,
-                Lastname = user.Lastname,
-                Email = user.Email,
-                Phone = user.Phone,
-                Role = user.Role,
-            };
-        
-        return userDtoProjection.ToList();
+        var userDtoProjectionList = _autoMapper.UserEntityListToUserDtoProjectionListMapper(entities);
+        return userDtoProjectionList;
     }
 
     public async Task<int> UpdateUser(UserDto userDto) {
-        var entity = _autoMapper.UserDtoToUserEntityMapper(userDto); 
+        var entity = _autoMapper.UserDtoToUserEntityMapper(userDto);
         var pwHash = _pwUtils.CreatePasswordHash(userDto.Password);
         entity.Password = pwHash;
         return await _userRepository.UpdateUser(entity);

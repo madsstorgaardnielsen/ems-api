@@ -10,7 +10,7 @@ public class AutoMapperUtils {
 
     public AutoMapperUtils() {
         _userEntityToDto = new Mapper(new MapperConfiguration(cfg =>
-            cfg.CreateMap<UserEntity, UserDto>()));
+            cfg.CreateMap<UserEntity, UserDtoProjection>()));
 
         _userDtoToEntity = new Mapper(new MapperConfiguration(cfg =>
             cfg.CreateMap<UserDto, UserEntity>()));
@@ -19,8 +19,8 @@ public class AutoMapperUtils {
             cfg.CreateMap<UserDto, UserDtoProjection>()));
     }
 
-    public List<UserDto> UserEntityListToUserDtoListMapper(IEnumerable<UserEntity> entities) {
-        return _userEntityToDto.Map<IEnumerable<UserEntity>, List<UserDto>>(entities);
+    public List<UserDtoProjection> UserEntityListToUserDtoProjectionListMapper(IEnumerable<UserEntity> entities) {
+        return _userEntityToDto.Map<IEnumerable<UserEntity>, List<UserDtoProjection>>(entities);
     }
 
     public UserDto UserEntityToUserDtoMapper(UserEntity entity) {

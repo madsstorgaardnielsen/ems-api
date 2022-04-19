@@ -3,7 +3,7 @@ using System.Security.Claims;
 using ems_api.DTOs;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ems_api.SecurityUtils; 
+namespace ems_api.Utils; 
 
 public class TokenUtils {
     
@@ -25,7 +25,7 @@ public class TokenUtils {
 
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-        var token = new JwtSecurityToken(claims: claims, expires: DateTime.Now.AddDays(1),
+        var token = new JwtSecurityToken(claims: claims, expires: DateTime.Now.AddMinutes(15),
             signingCredentials: credentials);
 
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);

@@ -1,10 +1,27 @@
-using ems_api.Database.Repositories;
-using ems_api.DTOs;
-using ems_api.Security;
-
 namespace ems_api.Services;
 
-//TODO interface
-public class UserService {
+using Interfaces;
 
+//TODO interface
+public class UserService : IUserService {
+    public Task<List<WorkdayDto>> GetAllWorkdays() {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<WorkdayDto>> GetWorkdaysFromPeriod(DateTime dateFrom, DateTime dateTo) {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<WorkdayDto>> GetWorkdaysFromPeriod(int userId, DateTime dateFrom, DateTime dateTo) {
+        throw new NotImplementedException();
+    }
+
+
+    public Task<int> AddWorkday(WorkdayEntity workdayEntity) {
+        throw new NotImplementedException();
+    }
+
+    public Task<int> UpdateWorkday(WorkdayEntity workdayEntity) {
+        throw new NotImplementedException();
+    }
 }

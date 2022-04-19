@@ -1,7 +1,6 @@
-using System.Runtime.Serialization;
-using ems_api.Database.Enums;
-
 namespace ems_api.DTOs;
+
+using System.Runtime.Serialization;
 
 [DataContract]
 public class UserDto {

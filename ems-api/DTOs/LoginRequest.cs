@@ -1,6 +1,6 @@
-using System.Runtime.Serialization;
-
 namespace ems_api.DTOs;
+
+using System.Runtime.Serialization;
 
 [DataContract]
 public class LoginRequest {

@@ -1,5 +1,3 @@
-using ems_api.DTOs;
-
 namespace ems_api.Database.Repositories;
 
 public interface IUserRepository : IDisposable {

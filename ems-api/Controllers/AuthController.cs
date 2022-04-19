@@ -1,10 +1,8 @@
-using ems_api.DTOs;
-using ems_api.Security;
-using ems_api.SecurityUtils;
-using ems_api.Services;
-using Microsoft.AspNetCore.Mvc;
-
 namespace ems_api.Controllers;
+
+using Services;
+using Utils;
+using Microsoft.AspNetCore.Mvc;
 
 //TODO log out
 [Route("api/[controller]")]
@@ -23,7 +21,7 @@ public class AuthController : ControllerBase {
         var user = await _authService.AuthenticateUser(request);
 
         if (user == null) return BadRequest("Invalid credentials");
-        
+
         var tokenUtil = new TokenUtils(_configuration);
         var token = tokenUtil.CreateToken(user);
         return Ok(token);
