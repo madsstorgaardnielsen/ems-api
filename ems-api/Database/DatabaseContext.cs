@@ -1,8 +1,7 @@
+using ems_api.Database.Configuration;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace ems_api.Database;
-
-using Security;
 
 public class DatabaseContext : IdentityDbContext<User> {
     public DatabaseContext(DbContextOptions<DatabaseContext> options) :
@@ -28,21 +27,13 @@ public class DatabaseContext : IdentityDbContext<User> {
         optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        base.OnModelCreating(modelBuilder);
-
-        var pwUtils = new PasswordUtils();
-        var pwHash = pwUtils.CreatePasswordHash("Admin");
-
-        modelBuilder.Entity<User>().HasData(
-            new User {
-                Id = "-1",
-                Email = "Admin",
-                PasswordHash = pwHash,
-                Role = "Admin",
-            });
-
-        modelBuilder.Entity<Workday>().HasData(
+    protected override void OnModelCreating(ModelBuilder builder) {
+        base.OnModelCreating(builder);
+        builder.ApplyConfiguration(new RoleConfiguration());
+        builder.ApplyConfiguration(new AdminConfiguration());
+        builder.ApplyConfiguration(new AssignAdminRoleConfig());
+        
+        builder.Entity<Workday>().HasData(
             new Workday {
                 WorkdayId = -1,
                 UserId = "-1"

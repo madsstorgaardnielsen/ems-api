@@ -108,17 +108,17 @@ namespace ems_api.Migrations
                         {
                             Id = "-1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e3404165-52ab-4312-ac21-c01add69f78e",
+                            ConcurrencyStamp = "8e4ef06a-c59b-4211-85ab-436793f5f129",
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Deleted = false,
-                            Email = "Admin",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "$2a$11$bkOIBYCNjLdkNM6EKSo4WuDEuXsxKl8z2RISB0U/64L3iFBKUb92u",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEC1EFzXP40+p6O/RHPTuIbtyWZqwCWpuMr4xlyDIQHSMVK7uiIQcQUVqPsVoKNu+7A==",
                             PhoneNumberConfirmed = false,
-                            Role = "Admin",
-                            SecurityStamp = "36a96d6a-11d5-4eb0-bd49-6d0cfef33dc7",
-                            TwoFactorEnabled = false
+                            SecurityStamp = "141c7e68-8377-45df-b958-71f9cdbb1248",
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
                         });
                 });
 
@@ -189,6 +189,22 @@ namespace ems_api.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "-2",
+                            ConcurrencyStamp = "4195d00a-afa0-4e53-8fee-22abfa518c33",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = "-1",
+                            ConcurrencyStamp = "ba41ea00-3f5e-4daf-9401-6b371d78b332",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -272,6 +288,13 @@ namespace ems_api.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "-1",
+                            RoleId = "-1"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -295,11 +318,9 @@ namespace ems_api.Migrations
 
             modelBuilder.Entity("ems_api.Database.Models.Workday", b =>
                 {
-                    b.HasOne("ems_api.Database.Models.User", "User")
+                    b.HasOne("ems_api.Database.Models.User", null)
                         .WithMany("Workdays")
                         .HasForeignKey("UserId");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

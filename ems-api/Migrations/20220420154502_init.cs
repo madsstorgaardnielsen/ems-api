@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ems_api.Migrations
 {
-    public partial class changes : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -230,9 +230,24 @@ namespace ems_api.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "-1", "ba41ea00-3f5e-4daf-9401-6b371d78b332", "Admin", "ADMIN" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "-2", "4195d00a-afa0-4e53-8fee-22abfa518c33", "User", "USER" });
+
+            migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Address", "ConcurrencyStamp", "Cpr", "Created", "Deleted", "Email", "EmailConfirmed", "Firstname", "Lastname", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Role", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "-1", 0, null, "e3404165-52ab-4312-ac21-c01add69f78e", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, "Admin", false, null, null, false, null, null, null, "$2a$11$bkOIBYCNjLdkNM6EKSo4WuDEuXsxKl8z2RISB0U/64L3iFBKUb92u", null, false, "Admin", "36a96d6a-11d5-4eb0-bd49-6d0cfef33dc7", false, null });
+                values: new object[] { "-1", 0, null, "8e4ef06a-c59b-4211-85ab-436793f5f129", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, false, null, null, false, null, null, "ADMIN", "AQAAAAEAACcQAAAAEC1EFzXP40+p6O/RHPTuIbtyWZqwCWpuMr4xlyDIQHSMVK7uiIQcQUVqPsVoKNu+7A==", null, false, null, "141c7e68-8377-45df-b958-71f9cdbb1248", false, "admin" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[] { "-1", "-1" });
 
             migrationBuilder.InsertData(
                 table: "Workdays",

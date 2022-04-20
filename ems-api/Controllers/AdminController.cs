@@ -10,7 +10,6 @@ namespace ems_api.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class AdminController : ControllerBase {
-    // private readonly AdminService _adminService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<AdminController> _logger;
     private readonly IMapper _mapper;

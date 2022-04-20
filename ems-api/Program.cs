@@ -19,11 +19,15 @@ builder.Services.AddAuthentication();
 
 builder.Services.ConfigureIdentity();
 
+
+
 builder.Services.ConfigureCors();
 
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddAutoMapper(typeof(InitMapper));
+
+
 
 var logger = new LoggerConfiguration()
     .ReadFrom

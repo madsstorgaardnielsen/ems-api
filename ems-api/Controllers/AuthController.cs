@@ -15,18 +15,14 @@ using Microsoft.AspNetCore.Mvc;
 [ApiController]
 public class AuthController : ControllerBase {
     private readonly UserManager<User> _userManager;
-
-    // private readonly SignInManager<User> _signInManager;
     private readonly ILogger<AuthController> _logger;
     private readonly IMapper _mapper;
 
     public AuthController(
         UserManager<User> userManager,
-        // SignInManager<User> signInManager,
         ILogger<AuthController> logger,
         IMapper mapper) {
         _userManager = userManager;
-        // _signInManager = signInManager;
         _logger = logger;
         _mapper = mapper;
     }
@@ -58,6 +54,8 @@ public class AuthController : ControllerBase {
 
     [HttpPost]
     [Route("register")]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Register([FromBody] UserDTO userDto) {
         _logger.LogInformation($"Init registration attempt: {userDto.Email}");
 
@@ -68,8 +66,8 @@ public class AuthController : ControllerBase {
         try {
             var user = _mapper.Map<User>(userDto);
             user.UserName = userDto.Email;
-            
-            var result = await _userManager.CreateAsync(user);
+
+            var result = await _userManager.CreateAsync(user, userDto.Password);
 
             if (!result.Succeeded) {
                 foreach (var error in result.Errors) {
@@ -86,26 +84,4 @@ public class AuthController : ControllerBase {
             return Problem($"Error in {nameof(Register)}", statusCode: 500);
         }
     }
-
-
-    // private readonly IConfiguration _configuration;
-    // private readonly AuthService _authService;
-    //
-    // public AuthController(IConfiguration configuration) {
-    //     _configuration = configuration;
-    //     _authService = new AuthService();
-    // }
-    //
-    // [HttpPost("login")]
-    // public async Task<ActionResult<string>> Login(LoginRequest request) {
-    //     
-    //     
-    //     var user = await _authService.AuthenticateUser(request);
-    //
-    //     if (user == null) return BadRequest("Invalid credentials");
-    //
-    //     var tokenUtil = new TokenUtils(_configuration);
-    //     var token = tokenUtil.CreateToken(user);
-    //     return Ok(token);
-    // }
 }
