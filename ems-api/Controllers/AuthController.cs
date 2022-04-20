@@ -19,6 +19,8 @@ public class AuthController : ControllerBase {
 
     [HttpPost("login")]
     public async Task<ActionResult<string>> Login(LoginRequest request) {
+        
+        
         var user = await _authService.AuthenticateUser(request);
 
         if (user == null) return BadRequest("Invalid credentials");
