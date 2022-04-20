@@ -26,6 +26,9 @@ public class UserDTO : LoginUserDTO {
     [DataType(DataType.PhoneNumber)]
     [StringLength(11, MinimumLength = 8)]
     public string Phone { get; set; }
+    
+    [Required]
+    public ICollection<string> Roles { get; set; }
 
     [Required] public DateTime Created { get; set; }
     [Required] public bool Deleted { get; set; }

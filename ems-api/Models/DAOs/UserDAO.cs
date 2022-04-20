@@ -6,7 +6,7 @@ public class UserDAO {
      public string Address { get; set; } = string.Empty;
      public string Email { get; set; } = string.Empty;
      public string Phone { get; set; } = string.Empty;
-     public string Role { get; set; }
+     public ICollection<string> Roles { get; set; }
      public IList<Workday> Workdays { get; set; }
      
 
