@@ -10,7 +10,7 @@ public class UserService : IUserService {
     private readonly IWorkdayRepository _workdayRepository;
 
     public UserService() {
-        _workdayRepository = new WorkdayRepository(new ApplicationDbContext());
+        _workdayRepository = new WorkdayRepository(new DatabaseContext());
     }
 
     public Task<List<WorkdayDto>> GetAllWorkdays() {
@@ -21,12 +21,12 @@ public class UserService : IUserService {
         throw new NotImplementedException();
     }
 
-    public Task<List<WorkdayDto>> GetWorkdaysFromPeriod(int userId, DateTime dateFrom, DateTime dateTo) {
+    public Task<List<WorkdayDto>> GetWorkdaysFromPeriod(string id, DateTime dateFrom, DateTime dateTo) {
         throw new NotImplementedException();
     }
 
 
-    public async Task<int> AddWorkday(WorkdayEntity workdayEntity) {
+    public async Task<string> AddWorkday(Workday workday) {
         // var result = await _workdayRepository.AddWorkday(workdayEntity);
         // if (result==-1) {
         //     
@@ -34,7 +34,7 @@ public class UserService : IUserService {
         throw new NotImplementedException();
     }
 
-    public Task<int> UpdateWorkday(WorkdayEntity workdayEntity) {
+    public Task<string> UpdateWorkday(Workday workday) {
         throw new NotImplementedException();
     }
 }

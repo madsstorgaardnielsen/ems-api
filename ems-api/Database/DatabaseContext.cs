@@ -4,14 +4,14 @@ namespace ems_api.Database;
 
 using Security;
 
-public class ApplicationDbContext : IdentityDbContext {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
+public class DatabaseContext : IdentityDbContext<User> {
+    public DatabaseContext(DbContextOptions<DatabaseContext> options) :
         base(options) {
     }
 
-    public ApplicationDbContext() {
+    public DatabaseContext() {
     }
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (optionsBuilder.IsConfigured) return;
 
@@ -21,7 +21,10 @@ public class ApplicationDbContext : IdentityDbContext {
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile(appSettings)
             .Build();
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+        var connectionString = configuration
+            .GetConnectionString("DefaultConnection");
+
         optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
     }
 
@@ -31,19 +34,24 @@ public class ApplicationDbContext : IdentityDbContext {
         var pwUtils = new PasswordUtils();
         var pwHash = pwUtils.CreatePasswordHash("Admin");
 
-        modelBuilder.Entity<UserEntity>().HasData(new UserEntity {
-            UserId = -1,
-            Email = "Admin",
-            Password = pwHash,
-            Role = "Admin",
-            Address = "Admin",
-            Cpr = "0000000000",
-            Firstname = "Admin",
-            Lastname = "Admin",
-            Phone = "00000000",
-            Deleted = false,
-            Created = DateTime.Now
-        });
+        modelBuilder.Entity<User>().HasData(
+            new User {
+                Id = "-1",
+                Email = "Admin",
+                PasswordHash = pwHash,
+                Role = "Admin",
+            });
+
+        modelBuilder.Entity<Workday>().HasData(
+            new Workday {
+                WorkdayId = -1,
+                UserId = "-1"
+            },
+            new Workday {
+                WorkdayId = -2,
+                UserId = "-1"
+            }
+        );
 
         // modelBuilder.Entity<UserEntity>().Property(u => u.Firstname).IsRequired().HasMaxLength(255);
     }
@@ -72,6 +80,6 @@ public class ApplicationDbContext : IdentityDbContext {
     //     }
     // }
 
-    public DbSet<UserEntity> Users { get; set; }
-    public DbSet<WorkdayEntity> Workdays { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Workday> Workdays { get; set; }
 }

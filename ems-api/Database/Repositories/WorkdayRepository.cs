@@ -1,9 +1,9 @@
 namespace ems_api.Database.Repositories; 
 
 public class WorkdayRepository : IWorkdayRepository{
-    private readonly ApplicationDbContext _database;
+    private readonly DatabaseContext _database;
 
-    public WorkdayRepository(ApplicationDbContext context) {
+    public WorkdayRepository(DatabaseContext context) {
         _database = context;
     }
     
@@ -11,26 +11,26 @@ public class WorkdayRepository : IWorkdayRepository{
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<WorkdayEntity>> GetAllWorkdays() {
+    public Task<IEnumerable<Workday>> GetAllWorkdays() {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<WorkdayEntity>> GetWorkdaysFromPeriod(DateTime @from, DateTime to) {
+    public Task<IEnumerable<Workday>> GetWorkdaysFromPeriod(DateTime @from, DateTime to) {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<WorkdayEntity>> GetWorkdaysFromPeriod(int userId, DateTime @from, DateTime to) {
+    public Task<IEnumerable<Workday>> GetWorkdaysFromPeriod(int userId, DateTime @from, DateTime to) {
         throw new NotImplementedException();
     }
 
-    public async Task<int> AddWorkday(WorkdayEntity workdayEntity) {
-        if (workdayEntity == null) return -1;
-        _database.Workdays.Add(workdayEntity);
+    public async Task<int> AddWorkday(Workday workday) {
+        if (workday == null) return -1;
+        _database.Workdays.Add(workday);
         await _database.SaveChangesAsync();
-        return workdayEntity.WorkdayId;
+        return workday.WorkdayId;
     }
 
-    public Task<int> UpdateWorkday(WorkdayEntity workdayEntity) {
+    public Task<int> UpdateWorkday(Workday workday) {
         throw new NotImplementedException();
     }
 }

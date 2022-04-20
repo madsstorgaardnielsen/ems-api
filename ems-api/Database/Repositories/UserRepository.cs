@@ -1,35 +1,35 @@
 namespace ems_api.Database.Repositories;
 
 public class UserRepository : IUserRepository {
-    private readonly ApplicationDbContext _database;
+    private readonly DatabaseContext _database;
 
-    public UserRepository(ApplicationDbContext context) {
+    public UserRepository(DatabaseContext context) {
         _database = context;
     }
 
-    public async Task<IEnumerable<UserEntity>> GetAllUsers() {
+    public async Task<IEnumerable<User>> GetAllUsers() {
         return await _database.Users.ToListAsync();
     }
 
-    public async Task<UserEntity> GetUserById(int userId) {
+    public async Task<User> GetUserById(int userId) {
         var entity = await _database.Users.FindAsync(userId);
         return entity ?? null;
     }
 
-    public async Task<int> CreateUser(UserEntity userEntity) {
-        if (userEntity == null) return -1;
-        _database.Users.Add(userEntity);
+    public async Task<string> CreateUser(User user) {
+        if (user == null) return "";
+        _database.Users.Add(user);
         await _database.SaveChangesAsync();
-        return userEntity.UserId;
+        return user.Id;
     }
 
-    public async Task<int> UpdateUser(UserEntity userEntity) {
-        var user = await _database.Users.SingleOrDefaultAsync(user => user.UserId == userEntity.UserId);
-        if (user == null) return -1;
+    public async Task<string> UpdateUser(User user) {
+        var u = await _database.Users.SingleOrDefaultAsync(u => u.Id == user.Id);
+        if (u == null) return "";
 
-        _database.Entry(user).CurrentValues.SetValues(userEntity);
+        _database.Entry(u).CurrentValues.SetValues(user);
         await _database.SaveChangesAsync();
-        return user.UserId;
+        return u.Id;
     }
 
     public async Task<bool> DeleteUser(int userId) {

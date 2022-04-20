@@ -1,25 +1,29 @@
 using System.Text;
+using ems_api.Configuration;
+using ems_api.Configurations;
 using ems_api.Database;
+using ems_api.Database.IRepository;
+using ems_api.Database.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ApplicationDbContext>();
-builder.Services.AddControllers();
+builder.Services.AddDbContext<DatabaseContext>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddCors(options => {
-    options.AddPolicy(name: "CorsPolicy",
-        policy => {
-            policy
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        });
-});
+builder.Services.AddAuthentication();
+
+builder.Services.ConfigureIdentity();
+
+builder.Services.ConfigureCors();
+
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddAutoMapper(typeof(InitMapper));
 
 var logger = new LoggerConfiguration()
     .ReadFrom
@@ -49,6 +53,10 @@ builder.Services
             };
     });
 
+builder.Services.AddControllers().AddNewtonsoftJson(options => {
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -58,9 +66,9 @@ if (app.Environment.IsDevelopment()) {
 }
 
 app.UseHttpsRedirection();
-app.UseCors();
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseCors("CorsPolicyAllowAll");
+// app.UseAuthentication();
+// app.UseAuthorization();
 app.MapControllers();
 
 try {

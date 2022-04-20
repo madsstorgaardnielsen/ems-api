@@ -10,7 +10,7 @@ public class AuthService {
     private readonly PasswordUtils _pwUtils;
 
     public AuthService() {
-        _userRepository = new UserRepository(new ApplicationDbContext());
+        _userRepository = new UserRepository(new DatabaseContext());
         _pwUtils = new PasswordUtils();
     }
 
@@ -20,7 +20,7 @@ public class AuthService {
 
         if (user == null) return null;
 
-        if (!_pwUtils.VerifyPasswordHash(loginRequest.Password, user.Password)) return null;
+        if (!_pwUtils.VerifyPasswordHash(loginRequest.Password, user.PasswordHash)) return null;
         var userDto = new UserDto {Role = user.Role};
         return userDto;
     }
