@@ -64,53 +64,5 @@ public class AdminController : ControllerBase {
             _logger.LogError(ex, $"Error while trying: {nameof(GetUsers)}");
             return StatusCode(500, "Internal server error.");
         }
-
-
-        // var result = await _adminService.GetUserById(userId);
-        // if (result != null) {
-        //     return result;
-        // }
-        //
-        // return NotFound("User with id: " + userId + " not found");
     }
-    //
-    // [HttpPost("CreateUser"), Authorize(Roles = $"{Role.Admin}, {Role.Moderator}")]
-    // public async Task<ActionResult<UserDto>> CreateUser(UserDto userDto) {
-    //     string result;
-    //     try {
-    //         result = await _adminService.CreateUser(userDto);
-    //     }
-    //     catch (Exception e) {
-    //         Console.WriteLine(e);
-    //         throw;
-    //     }
-    //
-    //     return result.Equals("") ? Ok("User created") : Problem();
-    // }
-    //
-    // [HttpDelete("DeleteUser"), Authorize(Roles = $"{Role.Admin}, {Role.Moderator}")]
-    // public async Task<ActionResult<UserDto>> DeleteUser(int userId) {
-    //     var result = await _adminService.DeleteUser(userId);
-    //     if (result) {
-    //         return Ok("User with id: " + userId + " deleted");
-    //     }
-    //
-    //     return NotFound("User with id: " + userId + " not found");
-    // }
-    //
-    // [HttpPut("UpdateUser"), Authorize(Roles = $"{Role.Admin}, {Role.Moderator}")]
-    // public async Task<ActionResult<UserDto>> UpdateUser(UserDto userDto) {
-    //     var result = await _adminService.UpdateUser(userDto);
-    //
-    //     if (result.Equals("")) {
-    //         return Ok("User with id: " + result + " updated successfully");
-    //     }
-    //
-    //     return NotFound("User with id: " + result + " not found");
-    // }
-    //
-    // [HttpGet("GetAllUsers"), Authorize(Roles = $"{Role.Admin}, {Role.Moderator}")]
-    // public async Task<ActionResult<List<UserDAO>>> GetAllUsers() {
-    //     return await _adminService.GetAllUsers();
-    // }
 }

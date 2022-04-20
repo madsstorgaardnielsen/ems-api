@@ -38,12 +38,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class {
                 .Aggregate(query, (current, property) => current.Include(property));
         }
 
-        // if (includes != null) {
-        //     foreach (var property in includes) {
-        //         query = query.Include(property);
-        //     }
-        // }
-
         return await query.AsNoTracking().FirstOrDefaultAsync(expression);
     }
 

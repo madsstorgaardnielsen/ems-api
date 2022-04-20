@@ -3,7 +3,6 @@ using System.Linq.Expressions;
 namespace ems_api.Database.IRepository;
 
 public interface IGenericRepository<T> where T : class {
-    
     Task<IList<T>> GetAll(
         Expression<Func<T, bool>> expression = null,
         Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
@@ -17,8 +16,4 @@ public interface IGenericRepository<T> where T : class {
     Task Delete(string id);
 
     void Update(T entity);
-
-
-
-
 }

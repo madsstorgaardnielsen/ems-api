@@ -6,9 +6,6 @@ namespace ems_api.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
 
-//https://www.youtube.com/watch?v=kCcMgxeL44I&list=PLUl9BcvgsrKYa9mUygO9lIGow-1GaNWqs&index=12
-//29:21 inde
-
 //TODO find ud af noget om UserManager
 //TODO log out
 [Route("api/[controller]")]

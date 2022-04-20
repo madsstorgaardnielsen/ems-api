@@ -13,9 +13,7 @@ public class UnitOfWork : IUnitOfWork {
 
     public IGenericRepository<User> Users => _users ??= new GenericRepository<User>(_context);
     public IGenericRepository<Workday> Workdays => _workdays ??= new GenericRepository<Workday>(_context);
-
-
-
+    
     public async Task Save() {
         await _context.SaveChangesAsync();
     }

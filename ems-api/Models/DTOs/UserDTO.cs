@@ -21,14 +21,13 @@ public class UserDTO : LoginUserDTO {
     [StringLength(200, MinimumLength = 2)] public string Lastname { get; set; }
 
     [StringLength(200, MinimumLength = 2)] public string Address { get; set; }
-    
+
     [Required]
     [DataType(DataType.PhoneNumber)]
     [StringLength(11, MinimumLength = 8)]
     public string Phone { get; set; }
-    
-    [Required]
-    public ICollection<string> Roles { get; set; }
+
+    [Required] public ICollection<string> Roles { get; set; }
 
     [Required] public DateTime Created { get; set; }
     [Required] public bool Deleted { get; set; }
