@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ems_api.Database.Models;
 
-using Enums;
 
 [Table("Users")]
 public class User : IdentityUser {

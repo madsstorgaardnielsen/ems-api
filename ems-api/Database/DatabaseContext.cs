@@ -80,6 +80,6 @@ public class DatabaseContext : IdentityDbContext<User> {
     //     }
     // }
 
-    public DbSet<User> Users { get; set; }
+    // public DbSet<User> Users { get; set; }
     public DbSet<Workday> Workdays { get; set; }
 }

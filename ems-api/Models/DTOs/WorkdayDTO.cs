@@ -1,7 +1,7 @@
 namespace ems_api.DTOs;
 
 
-public class WorkdayDto {
+public class WorkdayDTO {
     public int UserId { get; init; }
     public int WorkdayId { get; init; }
     public DateTime Date { get; set; }
