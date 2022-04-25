@@ -1,5 +1,6 @@
 using AutoMapper;
 using ems_api.Models.DTOs;
+using ems_api.Services;
 using Microsoft.AspNetCore.Identity;
 
 namespace ems_api.Controllers;
@@ -14,40 +15,39 @@ public class AuthController : ControllerBase {
     private readonly UserManager<User> _userManager;
     private readonly ILogger<AuthController> _logger;
     private readonly IMapper _mapper;
+    private readonly IAuthManager _authManager;
 
     public AuthController(
         UserManager<User> userManager,
         ILogger<AuthController> logger,
-        IMapper mapper) {
+        IMapper mapper, IAuthManager authManager) {
         _userManager = userManager;
         _logger = logger;
         _mapper = mapper;
+        _authManager = authManager;
     }
 
-    // [HttpPost]
-    // [Route("login")]
-    // public async Task<IActionResult> Login([FromBody] LoginUserDTO loginUserDto) {
-    //     _logger.LogInformation($"Init login attempt: {loginUserDto.Email}");
-    //
-    //     if (!ModelState.IsValid) {
-    //         return BadRequest(ModelState);
-    //     }
-    //
-    //     try {
-    //         var result =
-    //             await _signInManager.PasswordSignInAsync(loginUserDto.Email, loginUserDto.Password, false, false);
-    //
-    //         if (!result.Succeeded) {
-    //             return Unauthorized(loginUserDto);
-    //         }
-    //
-    //         return Accepted();
-    //     }
-    //     catch (Exception ex) {
-    //         _logger.LogError(ex, $"Error in {nameof(Login)}");
-    //         return Problem($"Error in {nameof(Login)}", statusCode: 500);
-    //     }
-    // }
+    [HttpPost]
+    [Route("login")]
+    public async Task<IActionResult> Login([FromBody] LoginUserDTO loginUserDto) {
+        _logger.LogInformation($"Init login attempt: {loginUserDto.Email}");
+
+        if (!ModelState.IsValid) {
+            return BadRequest(ModelState);
+        }
+
+        try {
+            if (await _authManager.ValidateUser(loginUserDto)) {
+                return Accepted(new {Token = await _authManager.CreateToken()});
+            }
+
+            return Unauthorized();
+        }
+        catch (Exception ex) {
+            _logger.LogError(ex, $"Error in {nameof(Login)}");
+            return Problem($"Error in {nameof(Login)}", statusCode: 500);
+        }
+    }
 
     [HttpPost]
     [Route("register")]

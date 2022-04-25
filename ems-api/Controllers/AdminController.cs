@@ -2,6 +2,7 @@ using AutoMapper;
 using ems_api.Configurations;
 using ems_api.Database.IRepository;
 using ems_api.Models.DAOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ems_api.Controllers;
@@ -20,6 +21,7 @@ public class AdminController : ControllerBase {
         _mapper = mapper;
     }
 
+    [Authorize]
     [HttpGet("workdays/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -35,6 +37,7 @@ public class AdminController : ControllerBase {
         }
     }
 
+    [Authorize]
     [HttpGet("users/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -51,6 +54,7 @@ public class AdminController : ControllerBase {
         }
     }
 
+    [Authorize]
     [HttpGet("users")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
