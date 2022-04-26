@@ -31,14 +31,13 @@ public class AdminController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteUser(string id) {
         var user = await _unitOfWork.Users.Get(u => u.Id == id);
-        if (user == null) {
-            return BadRequest();
+        if (user != null) {
+            await _unitOfWork.Users.Delete(id);
+            await _unitOfWork.Save();
+            return NoContent();
         }
 
-        await _unitOfWork.Users.Delete(id);
-        await _unitOfWork.Save();
-
-        return NoContent();
+        return BadRequest();
     }
 
     [Authorize]
@@ -47,25 +46,26 @@ public class AdminController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserDTO userDto) {
-        if (!ModelState.IsValid) {
-            _logger.LogError($"Error validating data in {nameof(UpdateUser)}");
-            return BadRequest(ModelState);
+        if (ModelState.IsValid) {
+            var user = await _unitOfWork.Users.Get(u => u.Id == id);
+
+            if (user == null) {
+                return BadRequest("Invalid data");
+            }
+
+            user.UserName = userDto.Email;
+            user.NormalizedEmail = userDto.Email.ToUpper();
+            user.NormalizedUserName = userDto.Email.ToUpper();
+
+            _mapper.Map(userDto, user);
+            _unitOfWork.Users.Update(user);
+            await _unitOfWork.Save();
+
+            return NoContent();
         }
 
-        var user = await _unitOfWork.Users.Get(u => u.Id == id);
-        if (user == null) {
-            return BadRequest("Invalid data");
-        }
-
-        user.UserName = userDto.Email;
-        user.NormalizedEmail = userDto.Email.ToUpper();
-        user.NormalizedUserName = userDto.Email.ToUpper();
-
-        _mapper.Map(userDto, user);
-        _unitOfWork.Users.Update(user);
-        await _unitOfWork.Save();
-
-        return NoContent();
+        _logger.LogError($"Error validating data in {nameof(UpdateUser)}");
+        return BadRequest(ModelState);
     }
 
     [Authorize]
@@ -74,22 +74,23 @@ public class AdminController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateUser([FromBody] UserDTO userDto) {
-        if (!ModelState.IsValid) {
-            _logger.LogInformation($"Invalid POST in {nameof(CreateUser)}");
-            return BadRequest(ModelState);
+        if (ModelState.IsValid) {
+            var user = _mapper.Map<User>(userDto);
+
+            var hasher = new PasswordHasher<User>();
+            var passHash = hasher.HashPassword(user, userDto.Password);
+            user.PasswordHash = passHash;
+            user.UserName = userDto.Email;
+
+            await _unitOfWork.Users.Insert(user);
+            await _unitOfWork.Save();
+            var userDao = _mapper.Map<UserDAO>(user);
+            return CreatedAtRoute("GetUser", new {id = user.Id}, userDao);
         }
 
-        var user = _mapper.Map<User>(userDto);
 
-        var hasher = new PasswordHasher<User>();
-        var passHash = hasher.HashPassword(user, userDto.Password);
-        user.PasswordHash = passHash;
-        user.UserName = userDto.Email;
-
-        await _unitOfWork.Users.Insert(user);
-        await _unitOfWork.Save();
-        var userDao = _mapper.Map<UserDAO>(user);
-        return CreatedAtRoute("GetUser", new {id = user.Id}, userDao);
+        _logger.LogInformation($"Invalid POST in {nameof(CreateUser)}");
+        return BadRequest(ModelState);
     }
 
     [Authorize]
@@ -99,8 +100,12 @@ public class AdminController : ControllerBase {
     public async Task<IActionResult> GetUser(string id) {
         // var user = await _unitOfWork.Users.Get(u => u.Id == id, new List<string>{"Workdays"});
         var user = await _unitOfWork.Users.Get(u => u.Id == id);
-        var result = _mapper.Map<UserDAO>(user);
-        return Ok(result);
+        if (user != null) {
+            var result = _mapper.Map<UserDAO>(user);
+            return Ok(result);
+        }
+
+        return NotFound();
     }
 
     [Authorize]
