@@ -30,11 +30,11 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
         <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.2" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.17.0" />
+        <PackageReference Include="X.PagedList.Mvc.Core" Version="8.4.0" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Logs" />
-      <Folder Include="Models" />
     </ItemGroup>
 
 </Project>

@@ -36,17 +36,11 @@ public class AuthController : ControllerBase {
             return BadRequest(ModelState);
         }
 
-        try {
-            if (await _authManager.ValidateUser(loginUserDto)) {
-                return Accepted(new {Token = await _authManager.CreateToken()});
-            }
+        if (await _authManager.ValidateUser(loginUserDto)) {
+            return Accepted(new {Token = await _authManager.CreateToken()});
+        }
 
-            return Unauthorized();
-        }
-        catch (Exception ex) {
-            _logger.LogError(ex, $"Error in {nameof(Login)}");
-            return Problem($"Error in {nameof(Login)}", statusCode: 500);
-        }
+        return Unauthorized();
     }
 
     [HttpPost]
@@ -60,26 +54,20 @@ public class AuthController : ControllerBase {
             return BadRequest(ModelState);
         }
 
-        try {
-            var user = _mapper.Map<User>(userDto);
-            user.UserName = userDto.Email;
+        var user = _mapper.Map<User>(userDto);
+        user.UserName = userDto.Email;
 
-            var result = await _userManager.CreateAsync(user, userDto.Password);
+        var result = await _userManager.CreateAsync(user, userDto.Password);
 
-            if (!result.Succeeded) {
-                foreach (var error in result.Errors) {
-                    ModelState.AddModelError(error.Code, error.Description);
-                }
-
-                return BadRequest(ModelState);
+        if (!result.Succeeded) {
+            foreach (var error in result.Errors) {
+                ModelState.AddModelError(error.Code, error.Description);
             }
 
-            await _userManager.AddToRolesAsync(user, userDto.Roles);
-            return Accepted();
+            return BadRequest(ModelState);
         }
-        catch (Exception ex) {
-            _logger.LogError(ex, $"Error in {nameof(Register)}");
-            return Problem($"Error in {nameof(Register)}", statusCode: 500);
-        }
+
+        await _userManager.AddToRolesAsync(user, userDto.Roles);
+        return Accepted();
     }
 }

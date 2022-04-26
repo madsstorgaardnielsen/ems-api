@@ -1,4 +1,6 @@
 using System.Linq.Expressions;
+using ems_api.Models;
+using X.PagedList;
 
 namespace ems_api.Database.IRepository;
 
@@ -8,6 +10,8 @@ public interface IGenericRepository<T> where T : class {
         Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
         List<string> includes = null
     );
+
+    Task<IPagedList<T>> GetAll(HttpRequestParams httpRequestParams, List<string> includes = null);
 
     Task<T> Get(Expression<Func<T, bool>> expression, List<string> includes = null);
 

@@ -1,5 +1,7 @@
 using System.Linq.Expressions;
 using ems_api.Database.IRepository;
+using ems_api.Models;
+using X.PagedList;
 
 namespace ems_api.Database.Repositories;
 
@@ -30,6 +32,18 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class {
 
         return await query.AsNoTracking().ToListAsync();
     }
+
+    public async Task<IPagedList<T>> GetAll(HttpRequestParams httpRequestParams, List<string> includes = null) {
+        IQueryable<T> query = _db;
+
+        if (includes != null) {
+            query = includes
+                .Aggregate(query, (current, property) => current.Include(property));
+        }
+
+        return await query.AsNoTracking().ToPagedListAsync(httpRequestParams.PageNumber, httpRequestParams.PageSize);
+    }
+
 
     public async Task<T> Get(Expression<Func<T, bool>> expression, List<string> includes = null) {
         IQueryable<T> query = _db;

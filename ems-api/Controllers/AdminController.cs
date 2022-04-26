@@ -1,6 +1,7 @@
 using AutoMapper;
 using ems_api.Configurations;
 using ems_api.Database.IRepository;
+using ems_api.Models;
 using ems_api.Models.DAOs;
 using ems_api.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -29,21 +30,15 @@ public class AdminController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteUser(string id) {
-        try {
-            var user = await _unitOfWork.Users.Get(u => u.Id == id);
-            if (user == null) {
-                return BadRequest();
-            }
-
-            await _unitOfWork.Users.Delete(id);
-            await _unitOfWork.Save();
-
-            return NoContent();
+        var user = await _unitOfWork.Users.Get(u => u.Id == id);
+        if (user == null) {
+            return BadRequest();
         }
-        catch (Exception e) {
-            _logger.LogError(e, $"Error in {nameof(DeleteUser)}");
-            return StatusCode(500, "Internal server error");
-        }
+
+        await _unitOfWork.Users.Delete(id);
+        await _unitOfWork.Save();
+
+        return NoContent();
     }
 
     [Authorize]
@@ -57,26 +52,20 @@ public class AdminController : ControllerBase {
             return BadRequest(ModelState);
         }
 
-        try {
-            var user = await _unitOfWork.Users.Get(u => u.Id == id);
-            if (user == null) {
-                return BadRequest("Invalid data");
-            }
-
-            user.UserName = userDto.Email;
-            user.NormalizedEmail = userDto.Email.ToUpper();
-            user.NormalizedUserName = userDto.Email.ToUpper();
-
-            _mapper.Map(userDto, user);
-            _unitOfWork.Users.Update(user);
-            await _unitOfWork.Save();
-
-            return NoContent();
+        var user = await _unitOfWork.Users.Get(u => u.Id == id);
+        if (user == null) {
+            return BadRequest("Invalid data");
         }
-        catch (Exception e) {
-            _logger.LogError(e, $"Error in {nameof(UpdateUser)}");
-            return StatusCode(500, "Internal server error");
-        }
+
+        user.UserName = userDto.Email;
+        user.NormalizedEmail = userDto.Email.ToUpper();
+        user.NormalizedUserName = userDto.Email.ToUpper();
+
+        _mapper.Map(userDto, user);
+        _unitOfWork.Users.Update(user);
+        await _unitOfWork.Save();
+
+        return NoContent();
     }
 
     [Authorize]
@@ -90,39 +79,17 @@ public class AdminController : ControllerBase {
             return BadRequest(ModelState);
         }
 
-        try {
-            var user = _mapper.Map<User>(userDto);
+        var user = _mapper.Map<User>(userDto);
 
-            var hasher = new PasswordHasher<User>();
-            var passHash = hasher.HashPassword(user, userDto.Password);
-            user.PasswordHash = passHash;
-            user.UserName = userDto.Email;
+        var hasher = new PasswordHasher<User>();
+        var passHash = hasher.HashPassword(user, userDto.Password);
+        user.PasswordHash = passHash;
+        user.UserName = userDto.Email;
 
-            await _unitOfWork.Users.Insert(user);
-            await _unitOfWork.Save();
-            var userDao = _mapper.Map<UserDAO>(user);
-            return CreatedAtRoute("GetUser", new {id = user.Id}, userDao);
-        }
-        catch (Exception e) {
-            _logger.LogError(e, $"Error in {nameof(CreateUser)}");
-            return StatusCode(500, "Internal server error");
-        }
-    }
-
-    [Authorize]
-    [HttpGet("workdays/{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetWorkDaysFromUserId(string id) {
-        try {
-            var workdays = await _unitOfWork.Workdays.GetAll(w => w.UserId == id);
-            var result = _mapper.Map<IList<WorkdayDAO>>(workdays);
-            return Ok(result);
-        }
-        catch (Exception ex) {
-            _logger.LogError(ex, $"Error while trying: {nameof(GetWorkDaysFromUserId)}");
-            return StatusCode(500, "Internal server error.");
-        }
+        await _unitOfWork.Users.Insert(user);
+        await _unitOfWork.Save();
+        var userDao = _mapper.Map<UserDAO>(user);
+        return CreatedAtRoute("GetUser", new {id = user.Id}, userDao);
     }
 
     [Authorize]
@@ -130,31 +97,29 @@ public class AdminController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetUser(string id) {
-        try {
-            // var user = await _unitOfWork.Users.Get(u => u.Id == id, new List<string>{"Workdays"});
-            var user = await _unitOfWork.Users.Get(u => u.Id == id);
-            var result = _mapper.Map<UserDAO>(user);
-            return Ok(result);
-        }
-        catch (Exception ex) {
-            _logger.LogError(ex, $"Error while trying: {nameof(GetUser)}");
-            return StatusCode(500, "Internal server error.");
-        }
+        // var user = await _unitOfWork.Users.Get(u => u.Id == id, new List<string>{"Workdays"});
+        var user = await _unitOfWork.Users.Get(u => u.Id == id);
+        var result = _mapper.Map<UserDAO>(user);
+        return Ok(result);
     }
 
     [Authorize]
     [HttpGet("users")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetUsers([FromQuery] HttpRequestParams httpRequestParams) {
+        var users = await _unitOfWork.Users.GetAll(httpRequestParams);
+        var results = _mapper.Map<IList<UserDAO>>(users);
+        return Ok(results);
+    }
+
+    [Authorize]
+    [HttpGet("users/paging")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetUsers() {
-        try {
-            var users = await _unitOfWork.Users.GetAll();
-            var results = _mapper.Map<IList<UserDAO>>(users);
-            return Ok(results);
-        }
-        catch (Exception ex) {
-            _logger.LogError(ex, $"Error while trying: {nameof(GetUsers)}");
-            return StatusCode(500, "Internal server error.");
-        }
+        var users = await _unitOfWork.Users.GetAll();
+        var results = _mapper.Map<IList<UserDAO>>(users);
+        return Ok(results);
     }
 }
