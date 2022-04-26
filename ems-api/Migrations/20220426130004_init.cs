@@ -46,10 +46,6 @@ namespace ems_api.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Address = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Role = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Deleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
@@ -58,7 +54,6 @@ namespace ems_api.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NormalizedEmail = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    EmailConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     PasswordHash = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     SecurityStamp = table.Column<string>(type: "longtext", nullable: true)
@@ -66,12 +61,7 @@ namespace ems_api.Migrations
                     ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PhoneNumber = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -232,17 +222,17 @@ namespace ems_api.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "-1", "ba41ea00-3f5e-4daf-9401-6b371d78b332", "Admin", "ADMIN" });
+                values: new object[] { "-1", "47d056cc-e617-4eb7-9736-c5c522b233f4", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "-2", "4195d00a-afa0-4e53-8fee-22abfa518c33", "User", "USER" });
+                values: new object[] { "-2", "1d1c425b-fcdf-48c8-961a-6205220d5cc1", "User", "USER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "Address", "ConcurrencyStamp", "Cpr", "Created", "Deleted", "Email", "EmailConfirmed", "Firstname", "Lastname", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Role", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "-1", 0, null, "8e4ef06a-c59b-4211-85ab-436793f5f129", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, false, null, null, false, null, null, "ADMIN", "AQAAAAEAACcQAAAAEC1EFzXP40+p6O/RHPTuIbtyWZqwCWpuMr4xlyDIQHSMVK7uiIQcQUVqPsVoKNu+7A==", null, false, null, "141c7e68-8377-45df-b958-71f9cdbb1248", false, "admin" });
+                columns: new[] { "Id", "Address", "ConcurrencyStamp", "Cpr", "Email", "Firstname", "Lastname", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "SecurityStamp", "UserName" },
+                values: new object[] { "-1", "ADMIN", "7f239e3d-6597-40f2-912f-bad30f590e58", "ADMIN", "ADMIN", "ADMIN", "ADMIN", "ADMIN", "ADMIN", "AQAAAAEAACcQAAAAEKHFpEhavUcymOu+knPOdl6oiB+PwfjdGJtxUHBJUUlXG6x43j5ABOQLlctMD57e0Q==", "ADMIN", "59fc8256-b910-4919-ad7c-b2b48aa0dcf5", "admin" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",

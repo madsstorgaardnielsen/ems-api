@@ -35,6 +35,14 @@ public class DatabaseContext : IdentityDbContext<User> {
         builder.ApplyConfiguration(new AdminConfiguration());
         builder.ApplyConfiguration(new AssignAdminRoleConfig());
 
+        builder.Entity<User>()
+            .Ignore(u => u.EmailConfirmed)
+            .Ignore(u => u.PhoneNumberConfirmed)
+            .Ignore(u => u.TwoFactorEnabled)
+            .Ignore(u => u.LockoutEnabled)
+            .Ignore(u => u.LockoutEnd)
+            .Ignore(u => u.AccessFailedCount);
+
         builder.Entity<Workday>().HasData(
             new Workday {
                 WorkdayId = -1,

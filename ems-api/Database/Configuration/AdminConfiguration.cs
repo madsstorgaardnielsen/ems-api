@@ -9,6 +9,14 @@ public class AdminConfiguration : IEntityTypeConfiguration<User> {
             Id = "-1",
             UserName = "admin",
             NormalizedUserName = "ADMIN",
+            Cpr = "ADMIN",
+            Firstname = "ADMIN",
+            Lastname =  "ADMIN",
+            NormalizedEmail =  "ADMIN",
+            Email =  "ADMIN",
+            Address =  "ADMIN",
+            PhoneNumber =  "ADMIN",
+            
         };
         admin.PasswordHash = PwGenerator(admin);
         builder.HasData(admin);

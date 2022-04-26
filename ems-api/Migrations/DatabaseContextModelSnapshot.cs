@@ -24,9 +24,6 @@ namespace ems_api.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
                     b.Property<string>("Address")
                         .HasColumnType("longtext");
 
@@ -37,30 +34,15 @@ namespace ems_api.Migrations
                     b.Property<string>("Cpr")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Firstname")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Lastname")
                         .HasColumnType("longtext");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -76,17 +58,8 @@ namespace ems_api.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Role")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
@@ -107,17 +80,17 @@ namespace ems_api.Migrations
                         new
                         {
                             Id = "-1",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "8e4ef06a-c59b-4211-85ab-436793f5f129",
-                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deleted = false,
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
+                            Address = "ADMIN",
+                            ConcurrencyStamp = "7f239e3d-6597-40f2-912f-bad30f590e58",
+                            Cpr = "ADMIN",
+                            Email = "ADMIN",
+                            Firstname = "ADMIN",
+                            Lastname = "ADMIN",
+                            NormalizedEmail = "ADMIN",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEC1EFzXP40+p6O/RHPTuIbtyWZqwCWpuMr4xlyDIQHSMVK7uiIQcQUVqPsVoKNu+7A==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "141c7e68-8377-45df-b958-71f9cdbb1248",
-                            TwoFactorEnabled = false,
+                            PasswordHash = "AQAAAAEAACcQAAAAEKHFpEhavUcymOu+knPOdl6oiB+PwfjdGJtxUHBJUUlXG6x43j5ABOQLlctMD57e0Q==",
+                            PhoneNumber = "ADMIN",
+                            SecurityStamp = "59fc8256-b910-4919-ad7c-b2b48aa0dcf5",
                             UserName = "admin"
                         });
                 });
@@ -194,14 +167,14 @@ namespace ems_api.Migrations
                         new
                         {
                             Id = "-2",
-                            ConcurrencyStamp = "4195d00a-afa0-4e53-8fee-22abfa518c33",
+                            ConcurrencyStamp = "1d1c425b-fcdf-48c8-961a-6205220d5cc1",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = "-1",
-                            ConcurrencyStamp = "ba41ea00-3f5e-4daf-9401-6b371d78b332",
+                            ConcurrencyStamp = "47d056cc-e617-4eb7-9736-c5c522b233f4",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
