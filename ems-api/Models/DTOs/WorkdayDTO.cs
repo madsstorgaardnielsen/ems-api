@@ -1,4 +1,4 @@
-namespace ems_api.DTOs;
+namespace ems_api.Models.DTOs;
 
 
 public class WorkdayDTO {

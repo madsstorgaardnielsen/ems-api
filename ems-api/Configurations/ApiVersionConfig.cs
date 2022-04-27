@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 namespace ems_api.Configurations; 
 
 public static class ApiVersionConfig {
-    public static void ConfigureAPIVersioning(this IServiceCollection services) {
+    public static void ConfigureApiVersioning(this IServiceCollection services) {
         services.AddApiVersioning(options => {
             options.ReportApiVersions = true;
             options.AssumeDefaultVersionWhenUnspecified = true;

@@ -1,7 +1,7 @@
 using AspNetCoreRateLimit;
 using ems_api.Configurations;
 using ems_api.Database;
-using ems_api.Database.Repositories;
+using ems_api.Database.UnitOfWork;
 using ems_api.Services;
 using ems_api.Utils;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +17,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddMemoryCache();
 builder.Services.ConfigureRateLimit();
 builder.Services.AddHttpContextAccessor();
-builder.Services.ConfigureAPIVersioning();
+builder.Services.ConfigureApiVersioning();
 builder.Services.ConfigureCors();
 builder.Services.ConfigureHttpCacheHeaders();
 builder.Services.AddAuthentication();
@@ -56,6 +56,7 @@ var logger = new LoggerConfiguration()
     .Enrich
     .FromLogContext()
     .CreateLogger();
+
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
 

@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Identity;
-
 namespace ems_api.Models.DAOs;
 
 public class UserDAO {

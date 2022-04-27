@@ -1,11 +1,12 @@
 using AutoMapper;
 using ems_api.Database.Models;
 using ems_api.Database.Repositories;
+using ems_api.Database.UnitOfWork;
 using ems_api.Models;
 using ems_api.Models.DAOs;
 using ems_api.Models.DTOs;
+using ems_api.Utils;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ems_api.Controllers;
@@ -59,6 +60,7 @@ public class AdminController : ControllerBase {
 
             _mapper.Map(userDto, user);
             _unitOfWork.Users.Update(user);
+
             await _unitOfWork.Save();
 
             return NoContent();
@@ -76,14 +78,13 @@ public class AdminController : ControllerBase {
     public async Task<IActionResult> CreateUser([FromBody] UserDTO userDto) {
         if (ModelState.IsValid) {
             var user = _mapper.Map<User>(userDto);
-
-            var hasher = new PasswordHasher<User>();
-            var passHash = hasher.HashPassword(user, userDto.Password);
-            user.PasswordHash = passHash;
+            
+            user.PasswordHash = new PwHasher().GetPasswordHash(user, userDto);
             user.UserName = userDto.Email;
 
             await _unitOfWork.Users.Insert(user);
             await _unitOfWork.Save();
+            
             var userDao = _mapper.Map<UserDAO>(user);
             return CreatedAtRoute("GetUser", new {id = user.Id}, userDao);
         }

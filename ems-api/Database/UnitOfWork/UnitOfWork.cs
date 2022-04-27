@@ -1,6 +1,7 @@
 using ems_api.Database.Models;
+using ems_api.Database.Repositories;
 
-namespace ems_api.Database.Repositories;
+namespace ems_api.Database.UnitOfWork;
 
 public class UnitOfWork : IUnitOfWork {
     private readonly DatabaseContext _context;

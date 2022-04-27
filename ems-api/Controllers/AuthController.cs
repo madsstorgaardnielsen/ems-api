@@ -8,8 +8,6 @@ namespace ems_api.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
 
-//TODO find ud af noget om UserManager
-//TODO log out
 [Route("api/[controller]")]
 [ApiController]
 public class AuthController : ControllerBase {
