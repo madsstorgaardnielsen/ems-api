@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
-using ems_api.Database.IRepository;
 using ems_api.Models;
+using Microsoft.EntityFrameworkCore;
 using X.PagedList;
 
 namespace ems_api.Database.Repositories;

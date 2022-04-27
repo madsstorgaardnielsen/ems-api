@@ -1,12 +1,9 @@
-using System.Reflection.Metadata;
-using System.Text;
 using ems_api.Configurations;
 using ems_api.Database;
-using ems_api.Database.IRepository;
 using ems_api.Database.Repositories;
 using ems_api.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using ems_api.Utils;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -16,23 +13,18 @@ builder.Services.AddDbContext<DatabaseContext>();
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Services.ConfigureAPIVersioning();
+builder.Services.ConfigureCors();
+builder.Services.ConfigureHttpCacheHeaders();
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
 builder.Services.ConfigureIdentity();
-
 builder.Services.ConfigureJwt(builder.Configuration);
 
-builder.Services.ConfigureCors();
-
-builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-
-builder.Services.AddScoped<IAuthManager, AuthManager>();
-
-builder.Services.AddAuthentication();
-
-builder.Services.AddAuthorization();
-
-builder.Services.AddAutoMapper(typeof(InitMapper));
+builder.Services.AddAutoMapper(typeof(ObjectMapper));
 
 builder.Services.AddSwaggerGen(options => {
     options.AddSecurityDefinition("Bearer token", new OpenApiSecurityScheme {
@@ -69,9 +61,15 @@ builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
 
 
-builder.Services.AddControllers().AddNewtonsoftJson(options => {
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-});
+builder.Services
+    .AddControllers(config => {
+        config
+            .CacheProfiles
+            .Add("duration120sec", new CacheProfile {Duration = 120});
+    })
+    .AddNewtonsoftJson(options => {
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    });
 
 var app = builder.Build();
 
@@ -87,8 +85,12 @@ app.UseHttpsRedirection();
 
 app.UseCors("CorsPolicyAllowAll");
 
-app.UseAuthentication();
+app.UseResponseCaching();
+app.UseHttpCacheHeaders();
 
+app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

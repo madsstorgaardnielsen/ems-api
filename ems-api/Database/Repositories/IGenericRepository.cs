@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 using ems_api.Models;
 using X.PagedList;
 
-namespace ems_api.Database.IRepository;
+namespace ems_api.Database.Repositories;
 
 public interface IGenericRepository<T> where T : class {
     Task<IList<T>> GetAll(

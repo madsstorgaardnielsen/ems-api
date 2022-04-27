@@ -1,4 +1,5 @@
 using AutoMapper;
+using ems_api.Database.Models;
 using ems_api.Models.DTOs;
 using ems_api.Services;
 using Microsoft.AspNetCore.Identity;
@@ -15,16 +16,16 @@ public class AuthController : ControllerBase {
     private readonly UserManager<User> _userManager;
     private readonly ILogger<AuthController> _logger;
     private readonly IMapper _mapper;
-    private readonly IAuthManager _authManager;
+    private readonly IAuthService _authService;
 
     public AuthController(
         UserManager<User> userManager,
         ILogger<AuthController> logger,
-        IMapper mapper, IAuthManager authManager) {
+        IMapper mapper, IAuthService authService) {
         _userManager = userManager;
         _logger = logger;
         _mapper = mapper;
-        _authManager = authManager;
+        _authService = authService;
     }
 
     [HttpPost]
@@ -36,8 +37,8 @@ public class AuthController : ControllerBase {
             return BadRequest(ModelState);
         }
 
-        if (await _authManager.ValidateUser(loginUserDto)) {
-            return Accepted(new {Token = await _authManager.CreateToken()});
+        if (await _authService.ValidateUser(loginUserDto)) {
+            return Accepted(new {Token = await _authService.CreateToken()});
         }
 
         return Unauthorized();

@@ -1,4 +1,6 @@
+using ems_api.Database.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ems_api.Database.Configuration;

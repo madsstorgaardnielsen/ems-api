@@ -1,18 +1,19 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using ems_api.Database.Models;
 using ems_api.Models.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ems_api.Services;
 
-public class AuthManager : IAuthManager {
+public class AuthService : IAuthService {
     private readonly UserManager<User> _userManager;
     private readonly IConfiguration _configuration;
     private User _user;
 
-    public AuthManager(UserManager<User> userManager, IConfiguration configuration) {
+    public AuthService(UserManager<User> userManager, IConfiguration configuration) {
         _userManager = userManager;
         _configuration = configuration;
     }

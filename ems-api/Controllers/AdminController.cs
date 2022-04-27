@@ -1,6 +1,6 @@
 using AutoMapper;
-using ems_api.Configurations;
-using ems_api.Database.IRepository;
+using ems_api.Database.Models;
+using ems_api.Database.Repositories;
 using ems_api.Models;
 using ems_api.Models.DAOs;
 using ems_api.Models.DTOs;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ems_api.Controllers;
 
-//TODO get arbejdsdage, etc
+[ApiVersion("1.0", Deprecated = false)]
 [Route("api/[controller]")]
 [ApiController]
 public class AdminController : ControllerBase {

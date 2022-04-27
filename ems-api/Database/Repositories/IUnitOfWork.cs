@@ -1,4 +1,6 @@
-namespace ems_api.Database.IRepository;
+using ems_api.Database.Models;
+
+namespace ems_api.Database.Repositories;
 
 public interface IUnitOfWork : IDisposable {
     IGenericRepository<User> Users { get; }

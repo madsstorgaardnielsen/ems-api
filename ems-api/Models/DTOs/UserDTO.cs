@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace ems_api.Models.DTOs;
 
 public class UserDTO : LoginUserDTO {
