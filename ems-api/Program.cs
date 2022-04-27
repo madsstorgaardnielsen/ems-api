@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using ems_api.Configurations;
 using ems_api.Database;
 using ems_api.Database.Repositories;
@@ -10,12 +11,12 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DatabaseContext>();
-
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-
+builder.Services.AddMemoryCache();
+builder.Services.ConfigureRateLimit();
+builder.Services.AddHttpContextAccessor();
 builder.Services.ConfigureAPIVersioning();
 builder.Services.ConfigureCors();
 builder.Services.ConfigureHttpCacheHeaders();
@@ -23,9 +24,7 @@ builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJwt(builder.Configuration);
-
 builder.Services.AddAutoMapper(typeof(ObjectMapper));
-
 builder.Services.AddSwaggerGen(options => {
     options.AddSecurityDefinition("Bearer token", new OpenApiSecurityScheme {
         Description = "JWT Auth using Bearer scheme, type: Bearer [space] token, below to authenticate",
@@ -60,7 +59,6 @@ var logger = new LoggerConfiguration()
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
 
-
 builder.Services
     .AddControllers(config => {
         config
@@ -80,19 +78,14 @@ if (app.Environment.IsDevelopment()) {
 }
 
 app.ConfigureExceptionHandler();
-
 app.UseHttpsRedirection();
-
 app.UseCors("CorsPolicyAllowAll");
-
 app.UseResponseCaching();
 app.UseHttpCacheHeaders();
-
+app.UseIpRateLimiting();
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 try {
